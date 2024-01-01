@@ -1,69 +1,102 @@
-// fonction pour ajouter un budget
-let budgetSet = document.querySelector('#budget_span')
-let balanceSet = document.querySelector('#balance_span')
-let expenseSet = document.querySelector('#expense_span')
-let inputBudget = document.querySelector('#input_budget')
-let inputAmount = document.querySelector('#inputAmount')
-let btnCalculate = document.querySelector('.calculate')
-let add_expense = document.querySelector('.add_expense')
-let initialBudget = 0
-let initialBlance = 0
-let expenseValue = 0;
-//localstorage
-let myAddBudgetRecupere = JSON.parse(localStorage.getItem('addBudget'));
-let myAddBalance = JSON.parse(localStorage.getItem('addAalance'))
+const budgetInput = document.getElementById('input_budget');
+const totalBudget = document.getElementById('budget_span');
+const titleExpenseInput = document.getElementById('titleExpense');
+const inputAmount = document.getElementById('inputAmount');
+const calculateButton = document.querySelector('.calculate');
+const addExpenseButton = document.querySelector('.add_expense');
+const totalExpense = document.querySelector('#expense_span');
+const totalBalance = document.querySelector('#balance_span');
+const table = document.querySelector('table');
 
-expenseValue = JSON.parse(localStorage.getItem('fadi'))
+let expenses = [];
+let totalAmount = 0;
+const localTotalBudgetAmount = 'localTotalBudgetAmount'
+const localExpenses = 'localExpenses'
 
-// ************** Budget ********************
-function addBudget() {
-    budgetSet.textContent = initialBudget += parseInt(inputBudget.value)
-    let myAddBudget = (initialBudget)
-    localStorage.setItem('addBudget', myAddBudget)
-}
-
-// **************** balance ********************
-function addBalance() {
-    // stocker la balance dans le localStorage
-    balanceSet.textContent = initialBlance += parseInt(inputBudget.value)
-    let myAddBalance = (initialBlance)
-    localStorage.setItem('addAalance', myAddBalance)
-    console.log(myAddBalance);
-}
-
-// condition pour afficher le budget dans dans budgetSet et  balanceSet 
-if (myAddBudgetRecupere && myAddBalance && expenseValue ) {
-    budgetSet.textContent = myAddBudgetRecupere
-    balanceSet.textContent = myAddBalance
-    expenseSet.textContent = expenseValue;
-}
-
-// Boutton calculer au click 
-btnCalculate.addEventListener('click', (e) => {
-    e.preventDefault();
-    addBudget();
-    addBalance()
-   
+calculateButton.addEventListener('click', () => {
+    const inputValue = +budgetInput.value;
+    const totalbudgetValue = parseInt(totalBudget.textContent);
+    totalAmount = inputValue + totalbudgetValue;
+    totalBudget.textContent = `${totalAmount} F`;
+    budgetInput.value = '';
+    localStorage.setItem(localTotalBudgetAmount, `${totalAmount}`);
 })
 
-// **************** Ajout de depense ********************
-function addExpense() {
-    expenseValue += parseInt(inputAmount.value)
-    localStorage.setItem('fadi', JSON.stringify(expenseValue));
-    expenseSet.textContent = expenseValue;   
-}
- 
-add_expense.addEventListener('click', (e) => {
+addExpenseButton.addEventListener('click', (e) => {
     e.preventDefault();
-    addExpense();   
-    calculateBalance();
-})
-
-
-let newBalance = 0;
-function calculateBalance() {
-    // balanceSet.textContent = parseInt(inputBudget.value) - parseInt(inputAmount.value) 
-
-   
+    const titleExpenseValue = titleExpenseInput.value;
+    const amountExpenseValue = +inputAmount.value;
     
+    table.innerHTML += `
+    <tr data-index="${expenses.length}" class="icon3 d-flex gap-5 justify-content-center align-items-center ">
+        <td>${titleExpenseValue}</td>
+        <td>${amountExpenseValue}</td>
+        <td class="">
+            <i class="bi bi-pencil-square" onclick="updateItem(event)"></i>
+            <i class="bi bi-trash-fill" onclick="deleteItem(event)"></i>
+        </td>
+    </tr>`;
+
+    const dataObject = {
+        title: titleExpenseValue,
+        price: amountExpenseValue
+    }
+    expenses.push(dataObject);
+
+    localStorage.setItem(localExpenses, JSON.stringify(expenses));
+    calculatetotalExpense()
+    titleExpenseInput.value = ''
+    inputAmount.value = ''
+})
+
+
+
+const init = () => {
+    totalAmount = +localStorage.getItem(localTotalBudgetAmount)
+    totalBudget.textContent = `${totalAmount} F`;
+
+    const tableData = localStorage.getItem(localExpenses);
+    expenses = JSON.parse(tableData);
+
+    for (let i = 0; i < expenses.length; i++) {
+        const element = expenses[i];
+        table.innerHTML += `
+    <tr data-index="${i}" class="icon3 d-flex gap-5 justify-content-center align-items-center ">
+    <td>${element.title}</td>
+    <td>${element.price}</td>
+    <td class="">
+        <i class="bi bi-pencil-square" onclick="updateItem(event)"></i>
+        <i class="bi bi-trash-fill" onclick="deleteItem(event)"></i>
+    </td>
+    </tr>`;
+    }
+    calculatetotalExpense()
+}
+init()
+
+function calculatetotalExpense() {
+    let initialeExpense = 0
+    expenses?.forEach(expense => {
+        initialeExpense += expense.price
+    })
+
+    totalExpense.textContent = initialeExpense;
+    const totalBalanceValue = totalAmount - initialeExpense;
+    totalBalance.innerHTML = `${totalBalanceValue}`
+}
+
+function updateItem(e) {
+    const index = +e.target.parentNode.parentNode.getAttribute('data-index');
+    const data = expenses[index];
+    console.log(data);
+    titleExpenseInput.value = data.title
+    inputAmount.value = data.price
+}
+
+function deleteItem(e) {
+    const index = +e.target.parentNode.parentNode.getAttribute('data-index');
+    expenses.splice(index, 1);
+    localStorage.setItem(localExpenses, JSON.stringify(expenses));
+    table.innerHTML = ''
+    init()
 }

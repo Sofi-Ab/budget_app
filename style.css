@@ -32,3 +32,7 @@ td .bi{
  .Add-expense{
     border: solid 1px rgb(230, 71, 8);
  }
+
+ .bi-pencil-square, .bi-trash-fill {
+    cursor: pointer;
+ }
