@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <!-- Deuxieme formulaire -->
-                <form action="" class="border border-danger p-2">
+                <form action="" class="border border-danger p-2 ">
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Please entre your budget</label>
                         <input type="text" class="form-control" id="titleExpense">
@@ -44,11 +44,14 @@
                     <div class="mb-3">
                         <button class="button add_expense" >Add expense</button>
                     </div>
+                    <div class="mb-3  ">
+                        <button class="button update-modif fs-5 " >update </button>
+                    </div>
 
                 </form>
             </div>
 
-            <div class="col">
+            <div class="col mt-5">
                 <div class="budget_icone">
 
                     <div class="icon1 d-flex flex-column">
@@ -70,21 +73,33 @@
 
                 </div>
                 <hr>
-                <table class="d-flex flex-column justify-content-around">
+                 <table class="d-flex flex-column justify-content-around">
                     <div class="icon3 d-flex gap-4 justify-content-center align-items-center ">
-                        <span class="fw-bold">Expense Title</span>
-                        <span class="fw-bold">Expense Value</span>
+                        <span class="fw-bold"> Title</span>
+                        <span class="fw-bold"> Value</span>
                         <span><i class="bi bi-gear d-flex justify-content-around align-items-center text-success"></i></span>
                     </div>
                     
-                </table>
+                   
+                </table> 
+                
             </div>
-            <div class="col" >
-                <button class="button-history w-75 fs-3">History</button>
+            <div class="col d-flex  align-items-center flex-column" >
+
+                <button class="button-history w-75 fs-3 d-flex justify-content-center align-items-center ">History</button>
+    
+
+                <button class="button-history w-75 fs-3 d-flex justify-content-center align-items-center bg-danger ">Close <i class="bi bi-arrow-up"></i></button>
+                
+                <div>
+                    <canvas id="myChart"></canvas>
+                  </div>
+
             </div>
+
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
